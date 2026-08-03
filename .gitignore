@@ -1,0 +1,41 @@
+# Datasets and generated indexes
+data/
+**/offline_split_output/
+**/*.faiss
+
+# Build products
+*.o
+*.a
+*.so
+*.so.*
+bin/
+build/
+
+# SGX generated proxy files and local signing keys
+*_u.c
+*_u.h
+*_t.c
+*_t.h
+Enclave_private.pem
+
+# Python caches and environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Experiment outputs
+*.log
+*.tmp
+*.trace
+results/**/*.csv
+results/**/*.json
+results/**/*.tsv
+App/results/
+FIXED_HNSW_ORAM/App/results*/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+*~

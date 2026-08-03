@@ -1,0 +1,47 @@
+<!--
+  Minimal Intel SGX enclave configuration for the SGX_HNSW demo.
+
+  This file is consumed by sgx_sign during enclave signing.
+
+  Notes for this project:
+  - Your exported server_index.bin was about 654 MB, so the enclave heap must be
+    comfortably larger than that if you load/decrypt the whole lower-layer index
+    into enclave memory at startup.
+  - StackMaxSize is per TCS/thread.
+  - TCSNum controls how many enclave threads can enter concurrently.
+  - This is a development/demo config, not a production hardening profile.
+-->
+<EnclaveConfiguration>
+  <!-- Product / security version fields for enclave identity. -->
+  <ProdID>1</ProdID>
+  <ISVSVN>1</ISVSVN>
+
+  <!-- Stack size per enclave thread (TCS): 2 MiB. -->
+  <StackMaxSize>0x200000</StackMaxSize>
+
+  <!-- Heap size: 4 GiB. Increase only for the legacy in-enclave whole-index path. -->
+  <!-- <HeapMaxSize>0x600000000</HeapMaxSize> -->
+  <!-- Heap size: 16 GiB. -->
+  <HeapMaxSize>0x400000000</HeapMaxSize>
+
+  <!-- Heap size: 48 GiB. test for MS MARCO -->
+  <!-- <HeapMaxSize>0xC00000000</HeapMaxSize> -->
+
+
+
+  <!-- Single-threaded baseline. -->
+  <!-- 8-threaded baseline. -->
+  <TCSNum>1</TCSNum>
+
+  <!-- 0 = bind, 1 = unbind. 1 is a flexible default for demos. -->
+  <TCSPolicy>1</TCSPolicy>
+
+  <!-- Keep debug enabled for development. -->
+  <DisableDebug>0</DisableDebug>
+
+  <!-- Usually left at 0 for simple demos. -->
+  <MiscSelect>0</MiscSelect>
+  <MiscMask>0xFFFFFFFF</MiscMask>
+
+
+</EnclaveConfiguration>

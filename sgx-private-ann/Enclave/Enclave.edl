@@ -1,0 +1,57 @@
+enclave {
+  from "sgx_tstdc.edl" import *;
+
+  trusted {
+    public sgx_status_t ecall_set_demo_key([in, size=16] uint8_t* key16);
+
+    // Register the metadata needed to initialize one server-resident LayerORAM.
+    public sgx_status_t ecall_register_plain_layer_meta(
+        uint32_t layer,
+        uint32_t N_global,
+        uint32_t dim,
+        uint32_t M_layer,
+        uint32_t record_size,
+        uint32_t invalid_node_id);
+
+    public sgx_status_t ecall_register_pq_codebook(
+        [in, size=codebook_bytes] uint8_t* codebook,
+        uint32_t codebook_bytes);
+
+    public sgx_status_t ecall_build_pq_hint_oram(
+        [in, size=hint_table_bytes] uint8_t* hint_table,
+        uint32_t hint_table_bytes,
+        uint32_t linear_threshold);
+
+    public sgx_status_t ecall_set_pq_filter_config(
+        uint8_t enabled,
+        uint32_t layer_mask,
+        uint32_t efn0,
+        uint32_t efn1);
+
+    public sgx_status_t ecall_search_encrypted(
+        [in, size=req_blob_size] uint8_t* req_blob,
+        uint32_t req_blob_size,
+        [out, size=resp_blob_capacity] uint8_t* resp_blob,
+        uint32_t resp_blob_capacity,
+        [out] uint32_t* actual_resp_blob_size);
+
+    // Run deferred ORAM rebuild / cascade outside the online query critical path.
+    public sgx_status_t ecall_run_oram_maintenance(uint64_t qid);
+
+    public sgx_status_t ecall_clear_index();
+  };
+
+  untrusted {
+    void ocall_oram_now_ns([out] uint64_t* out_ns);
+
+    void ocall_print_string([in, string] const char* str);
+
+    // Initialization-time access to records in the registered split-layer store.
+    void ocall_plain_layer_lookup(
+        uint32_t layer,
+        uint32_t key_global_id,
+        [out, size=record_capacity] uint8_t* record_out,
+        uint32_t record_capacity,
+        [out] uint8_t* found);
+  };
+};
